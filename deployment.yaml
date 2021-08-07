@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  "web"
+  labels:
+    app:  "web"
+spec:
+  selector:
+    matchLabels:
+      app: "web"
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app:  "web"
+    spec:
+      containers:
+      - name:  "web"
+        image:  royalnaveen9740/web
+        ports:
+        - containerPort:  80
+          name:  "web-app"                          
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "web-service"
+spec:
+  selector:
+    app: "web"
+  type: NodePort
+  ports:
+  - name: "zuul-service"
+    port: 80
+    targetPort: 80 
+    nodePort: 32470 
+    
